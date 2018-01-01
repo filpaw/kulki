@@ -6,7 +6,8 @@ import javafx.scene.shape.Circle;
 
 import java.util.Random;
 
-import static sample.BallsApp.SIZE;
+import static sample.Board.SIZE;
+
 
 public class Ball extends StackPane {
 
@@ -62,4 +63,6 @@ public class Ball extends StackPane {
     public void abortMove() {
         relocate(oldX, oldY);
     }
+
+
 }

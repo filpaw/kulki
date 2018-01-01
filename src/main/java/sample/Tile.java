@@ -6,6 +6,8 @@ import javafx.scene.shape.Rectangle;
 
 import java.awt.*;
 
+import static sample.Board.SIZE;
+
 public class Tile extends Rectangle{
 
     private Ball ball;
@@ -23,13 +25,13 @@ public class Tile extends Rectangle{
     }
 
     public Tile(int col, int row){
-        setWidth(BallsApp.SIZE);
-        setHeight(BallsApp.SIZE);
+        setWidth(SIZE);
+        setHeight(SIZE);
         setStroke(Color.LIGHTGRAY);
         setArcHeight(15);
         setArcWidth(15);
 
-        relocate(col * BallsApp.SIZE, row * BallsApp.SIZE);
+        relocate(col * SIZE, row * SIZE);
 
         setFill(Color.WHEAT);
     }
