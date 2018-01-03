@@ -4,14 +4,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-import java.util.Random;
-
 import static sample.Board.SIZE;
 
 
 public class Ball extends StackPane {
 
-    private BallType type;
+    private final BallType type;
 
     private double mouseX, mouseY;
     private double oldX, oldY;

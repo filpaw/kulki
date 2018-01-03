@@ -1,5 +1,5 @@
 package sample;
 
 public enum BallType {
-    BLUE, CORAL, GREEN, YELLOW;
+    BLUE, RED, GREEN, YELLOW
 }

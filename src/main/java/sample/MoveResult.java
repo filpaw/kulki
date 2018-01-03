@@ -2,13 +2,13 @@ package sample;
 
 public class MoveResult {
 
-    private MoveType type;
+    private final MoveType type;
 
     public MoveType getType() {
         return type;
     }
 
-    private Ball ball;
+    private final Ball ball;
 
     public Ball getBall() {
         return ball;
@@ -18,7 +18,7 @@ public class MoveResult {
         this(type, null);
     }
 
-    public MoveResult(MoveType type, Ball ball) {
+    private MoveResult(MoveType type, Ball ball) {
         this.type = type;
         this.ball = ball;
     }

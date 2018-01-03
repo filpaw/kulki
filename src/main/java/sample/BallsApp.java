@@ -1,18 +1,8 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
-import java.util.Random;
-
-import static sample.Board.HEIGHT;
-import static sample.Board.SIZE;
-import static sample.Board.WIDTH;
 
 public class BallsApp extends Application {
 
@@ -29,7 +19,7 @@ public class BallsApp extends Application {
 //        primaryStage.setScene(new Scene(root, 300, 275));
 //        primaryStage.show();
 //    }
-    private Board board = new Board();
+    private final Board board = new Board();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
