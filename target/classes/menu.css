@@ -1,0 +1,45 @@
+#play-btn {
+    -fx-background-color: red;
+    -fx-text-fill: #ffaaaa;
+}
+
+#skin-btn {
+    -fx-background-color: green;
+    -fx-text-fill: #aaffaa;
+}
+
+#help-btn {
+    -fx-background-color: yellow;
+    -fx-text-fill: #aaaa00;
+}
+
+#scores-btn {
+    -fx-background-color: blue;
+    -fx-text-fill: #aaaaff;
+}
+
+#menus {
+    -fx-background-position: center;
+
+}
+
+#menus Button {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 75px;
+    -fx-min-height: 150px;
+    -fx-max-height: 150px;
+    -fx-min-width: 150px;
+    -fx-max-width: 150px;
+    -fx-background-insets: 5px;
+}
+
+#menus Button:hover {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
+
+#menus Button:pressed {
+    -fx-background-color: #555555;
+    -fx-text-fill: #cccccc;
+}

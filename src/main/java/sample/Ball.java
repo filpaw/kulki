@@ -34,9 +34,6 @@ public class Ball extends StackPane {
         Circle circle = new Circle(SIZE / 3.5);
         circle.setFill(Color.valueOf(String.valueOf(type)));
 
-//        circle.setStroke(Color.valueOf("LIGHT" + String.valueOf(type)));
-//        circle.setStrokeWidth(SIZE * 0.05);
-
         circle.setTranslateX((SIZE - SIZE / 3.5 * 2) / 2);
         circle.setTranslateY((SIZE - SIZE / 3.5 * 2) / 2);
 

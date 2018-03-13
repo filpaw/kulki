@@ -2,17 +2,18 @@ package sample;
 
 import javafx.scene.Group;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 
 import java.util.Random;
 
 public class Board {
 
-    public static final int SIZE = 60;
-    private static final int WIDTH = 7;
-    private static final int HEIGHT = 7;
-    private static final int LENGTH_TO_REMOVE = 3;
-    private static final int BALLS_TO_ADD = 2;
+    private static final int SIZE = 60;
+    private static final int WIDTH = 8;
+    private static final int HEIGHT = 8;
+    private static final int LENGTH_TO_REMOVE = 5;
+    private static final int BALLS_TO_ADD = 3;
     private static final int BALLS_TO_ADD_AFTER_MOVE = 3;
     private boolean deletedStatus = false;
 
@@ -22,12 +23,20 @@ public class Board {
     private final Group ballGroup = new Group();
     private int freeTiles = WIDTH * HEIGHT;
 
+    private double prefWidth;
+    private double prefHeight;
+
+    private int score = 0;
+
+    private Score scoreClass;
+
+    public Button back;
+
 
     public Parent createContent() {
         Pane root = new Pane();
-        root.setPrefSize(WIDTH * SIZE, HEIGHT * SIZE);
-        root.getChildren().addAll(tileGroup, ballGroup);
 
+        root.getChildren().addAll(tileGroup, ballGroup);
 
         for (int row = 0; row < HEIGHT; row++) {
             for (int col = 0; col < WIDTH; col++) {
@@ -37,8 +46,22 @@ public class Board {
                 tileGroup.getChildren().addAll(tile);
             }
         }
-
         addBalls(BALLS_TO_ADD);
+
+        scoreClass = new Score(100, 20, "elo");
+        scoreClass.setLayout(WIDTH * SIZE + 50, 20);
+        root.getChildren().add(scoreClass.stackPane);
+
+        prefWidth = WIDTH * SIZE + 100 + scoreClass.getWidth();
+        prefHeight = HEIGHT * SIZE;
+
+        root.setPrefSize(prefWidth, prefHeight);
+
+        back = new Button("BACK");
+        back.setLayoutY(root.getPrefHeight() - 50);
+        back.setLayoutX(root.getPrefWidth() - 100);
+        root.getChildren().add(back);
+
 
         return root;
     }
@@ -46,13 +69,7 @@ public class Board {
     private void addBalls(int neededBalls) {
         int colAddingBall;
         int rowAddingBall;
-//        int freeTiles = 0;
-//
-//        for (int row = 0; row < HEIGHT; row++) {
-//            for (int col = 0; col < WIDTH; col++) {
-//                if (!board[col][row].hasBall()) freeTiles++;
-//            }
-//        }
+
         if (freeTiles == 0) {
 
         } else {
@@ -71,14 +88,7 @@ public class Board {
                     if (!board[colAddingBall][rowAddingBall].hasBall()) {
                         ballGroup.getChildren().add(ball);
                         board[colAddingBall][rowAddingBall].setBall(ball);
-//                        checkBalls(ball, 1, 0, true);
-//                        checkBalls(ball, 0, 1, true);
-//                        checkBallsCondition(ball, -1, 0, true);
-//                        checkBallsCondition(ball, 0, -1, true);
-//                        checkBallsCondition(ball, 1, 1, true);
-//                        checkBallsCondition(ball, -1, 1, true);
-//                        checkBallsCondition(ball, 1, -1, true);
-//                        checkBallsCondition(ball, -1, -1, true);
+                        callCheckBalls(ball);
                         i++;
                         freeTiles--;
                     }
@@ -93,8 +103,6 @@ public class Board {
             return new MoveResult(MoveType.NONE);
         }
 
-//        int x0 = toBoard(ball.getOldX());
-//        int y0 = toBoard(ball.getOldY());
         return new MoveResult(MoveType.NORMAL);
     }
 
@@ -104,8 +112,12 @@ public class Board {
         ball.setOnMouseReleased(e -> {
             int newX = toBoard(ball.getLayoutX());
             int newY = toBoard(ball.getLayoutY());
-
-            MoveResult result = tryMove(ball, newX, newY);
+            MoveResult result;
+            try {
+                result = tryMove(ball, newX, newY);
+            } catch (Exception ex) {
+                result = new MoveResult(MoveType.NONE);
+            }
 
             int x0 = toBoard(ball.getOldX());
             int y0 = toBoard(ball.getOldY());
@@ -118,22 +130,33 @@ public class Board {
                     ball.move(newX, newY);
                     board[x0][y0].setBall(null);
                     board[newX][newY].setBall(ball);
-                    checkBalls(ball, 1, 0, true);
-                    checkBalls(ball, 0, 1, true);
-                    checkBalls(ball, -1, 0, true);
-                    checkBalls(ball, 0, -1, true);
-                    deletedStatus = false;
-//                    checkBallsCondition(ball, 1, 1, true);
-//                    checkBallsCondition(ball, -1, 1, true);
-//                    checkBallsCondition(ball, 1, -1, true);
-//                    checkBallsCondition(ball, -1, -1, true);
-//                    removeBall(ball);
-                    addBalls(BALLS_TO_ADD_AFTER_MOVE);
+
+                    if (callCheckBalls(ball)) {
+                    } else
+                        addBalls(BALLS_TO_ADD_AFTER_MOVE);
+                    getScore();
                     break;
             }
         });
 
         return ball;
+    }
+
+    private boolean callCheckBalls(Ball ball) {
+        checkBalls(ball, 1, 0, true);
+        checkBalls(ball, 0, 1, true);
+        checkBalls(ball, -1, 0, true);
+        checkBalls(ball, 0, -1, true);
+        checkBalls(ball, 1, 1, true);
+        checkBalls(ball, -1, 1, true);
+        checkBalls(ball, 1, -1, true);
+        checkBalls(ball, -1, -1, true);
+        if (deletedStatus) {
+            deletedStatus = false;
+            return true;
+        }
+        return false;
+
     }
 
     private void removeBall(Ball ball) {
@@ -147,8 +170,8 @@ public class Board {
     }
 
     private boolean checkBalls(Ball ball, int colPosition, int rowPosition, boolean flag) {
-        if(deletedStatus){}
-        else {
+        if (deletedStatus) {
+        } else {
             BallType ballType = ball.getType();
             int col = (int) (ball.getOldX() / SIZE);
             int row = (int) (ball.getOldY() / SIZE);
@@ -161,8 +184,8 @@ public class Board {
                 if (newCol + colPosition < WIDTH && newCol + colPosition >= 0 && newRow + rowPosition < HEIGHT && newRow + rowPosition >= 0) {
 
                     if (board[newCol + colPosition][newRow + rowPosition].hasBall() && flag) {
-                        newCol = newCol + colPosition;
-                        newRow = newRow + rowPosition;
+                        newCol += colPosition;
+                        newRow += rowPosition;
                         if (board[newCol][newRow].getBall().getType() == ballType) {
 
                         } else {
@@ -171,8 +194,8 @@ public class Board {
                     } else if (flag) {
                         go = checkBalls(board[newCol][newRow].getBall(), -colPosition, -rowPosition, false);
                     } else if (board[newCol + colPosition][newRow + rowPosition].hasBall() && !flag) {
-                        newCol = newCol + colPosition;
-                        newRow = newRow + rowPosition;
+                        newCol += colPosition;
+                        newRow += rowPosition;
                         if (board[newCol][newRow].getBall().getType() == ballType) {
                             length++;
                         } else {
@@ -220,10 +243,39 @@ public class Board {
                 removeBall(board[(int) ball.getOldX() / SIZE][(int) ball.getOldY() / SIZE - i].getBall());
             deletedStatus = true;
         }
+        setScore(length);
     }
 
+    private void setScore(int length) {
+        score += length * (1 + 0.5 * (length - 5));
+        scoreClass.changeScore(score);
+    }
+
+    private void getScore() {
+        System.out.println("Score: " + score);
+    }
 
     private int toBoard(double pixel) {
         return (int) ((pixel + SIZE / 2) / SIZE);
+    }
+
+    public static int getSIZE() {
+        return SIZE;
+    }
+
+    public static int getWIDTH() {
+        return WIDTH;
+    }
+
+    public static int getHEIGHT() {
+        return HEIGHT;
+    }
+
+    public double getPrefWidth() {
+        return prefWidth;
+    }
+
+    public double getPrefHeight() {
+        return prefHeight;
     }
 }
